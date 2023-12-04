@@ -19,18 +19,25 @@ int main (int argc, const char * argv[]) {
   pthread_mutex_init(&mutex, NULL);
 
   int i;
+  clock_t start, end;
+  double cpu_time_used;
 
+  start = clock();
   for (i = 0; i < NUMBER_OF_THREADS; i++) {
     pthread_create(&runners[i], 0, runner, &points_per_thread);
   }
-
+  
   for (i = 0; i < NUMBER_OF_THREADS; i++) {
     pthread_join(runners[i], NULL);
   }
 
+  end = clock();
+
   est_pi = pow(2.0, 3.0) * sphere_count / NUMBER_OF_POINTS;
   printf("Estimated Volume from %d points = %f\n", NUMBER_OF_POINTS, est_pi);
-
+  printf("Actual Volume with the formula (4*pi*r^3)/3: %f\n", (4*3.1415926*pow(1, 3)/3));
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("Time used: %f\n", cpu_time_used);
   return 0;
 }
 
